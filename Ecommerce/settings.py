@@ -12,8 +12,11 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 import os
 from msilib.schema import Environment
 from pathlib import Path
-
+from environ import Env
 import dj_database_url
+env = Env()
+Env.read_env()
+ENVIROMENT = env('ENVIRONMENT', default='production')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,11 +26,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-y2jgos)r7%!xnpyz-1(0q&@yeopvtfcsvd9id83o!v)(gc#2_u'
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
+if ENVIROMENT == 'production':
+    DEBUG = True
+else:
+    DEBUG = False
 ALLOWED_HOSTS = []
 
 
@@ -197,3 +202,4 @@ MPESA_INITIATOR_USERNAME = 'testapi'
 # Plaintext password for initiator (to be used in B2C, B2B, AccountBalance and TransactionStatusQuery Transactions)
 
 MPESA_INITIATOR_SECURITY_CREDENTIAL = 'Safaricom999!*!'
+
