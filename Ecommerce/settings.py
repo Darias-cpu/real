@@ -9,8 +9,11 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+import os
+from msilib.schema import Environment
 from pathlib import Path
+
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -82,11 +85,29 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'djangoecomm',
         'HOST': 'localhost',
-        'USER': 'root',
+       'USER': 'root',
         'PASSWORD': '',
         'PORT': 3306,
     }
 }
+
+POSTGRES_LOCALLY=True
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+
+def env(param):
+    """Retrieve the value of an environment variable from the .env file."""
+    return os.getenv(param)
+
+
+
+
+
+if Environment == 'production' or POSTGRES_LOCALLY == False:
+    DATABASES['default'] = dj_database_url.parse(env('DATABASE_URL'))
 
 
 # Password validation
@@ -137,6 +158,7 @@ MEDIA_ROOT = BASE_DIR / 'static'
 STATICFILES_DIRS=[
     BASE_DIR / 'static',
 ]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MPESA_ENVIRONMENT = 'sandbox'
 
